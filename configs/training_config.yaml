@@ -1,0 +1,160 @@
+dataset:
+  actual_classes:
+  - Healthy
+  - Internode borer
+  - Pink borer
+  - Rat damage
+  - Stalk borer
+  - Top borer
+  - army worm
+  - mealy bug
+  - porcupine damage
+  - root borer
+  - termite
+  actual_num_classes: 11
+  batch_size: 32
+  class_names:
+  - Healthy
+  - Internode borer
+  - Pink borer
+  - Rat damage
+  - Stalk borer
+  - Top borer
+  - army worm
+  - mealy bug
+  - porcupine damage
+  - root borer
+  - termite
+  image_size: 256
+  num_classes: 11
+  num_workers: 4
+  path: G:/AI work/IMAGE DATASET
+  train_split: 0.8
+  val_split: 0.2
+distillation:
+  alpha: 0.3
+  attention_loss_weight: 0.05
+  beta: 0.7
+  feature_loss_weight: 0.1
+  temperature: 3.0
+  use_attention_transfer: false
+  use_feature_distillation: false
+export:
+  onnx:
+    dynamic_axes: false
+    enabled: true
+    filename: student_model.onnx
+    opset_version: 13
+    path: models/student/onnx
+  pytorch:
+    enabled: true
+    filename: student_model.pt
+    path: models/student/pytorch
+  tflite:
+    enabled: true
+    filename: student_model.tflite
+    path: models/student/tflite
+    quantization: dynamic
+    tf_version_target: '2.14'
+logging:
+  level: INFO
+  log_dir: logs
+  metrics:
+  - loss
+  - accuracy
+  - precision
+  - recall
+  - f1_score
+  - confusion_matrix
+  - per_class_accuracy
+  save_frequency: 5
+  tensorboard: true
+paths:
+  checkpoints: checkpoints
+  logs: logs
+  metrics: metrics
+  models: models
+  root: .
+student:
+  activation: relu
+  architecture: CustomCNN
+  channels:
+  - 32
+  - 64
+  - 128
+  - 256
+  - 512
+  dropout_rate: 0.3
+  input_channels: 3
+  input_size: 256
+  num_classes: 11
+  target_size_mb: 15
+  use_batch_norm: true
+  use_depthwise_separable: true
+  use_dropout: true
+teachers:
+  models:
+  - name: mobilenet_v2
+    path: mobilenet_v2.onnx
+    weight: 1.0
+  - name: resnet50
+    path: resnet50.onnx
+    weight: 1.0
+  - name: inception_v3
+    path: inception_v3.onnx
+    weight: 1.0
+  - name: efficientnet_b0
+    path: efficientnet_b0.onnx
+    weight: 1.0
+  - name: darknet53
+    path: darknet53.onnx
+    weight: 1.0
+  - name: alexnet
+    path: alexnet.onnx
+    weight: 1.0
+  - name: yolo11n-cls
+    path: yolo11n-cls.onnx
+    weight: 1.0
+  - name: ensemble_attention
+    path: ensemble_attention.onnx
+    weight: 1.5
+  - name: ensemble_concat
+    path: ensemble_concat.onnx
+    weight: 1.5
+  - name: ensemble_cross
+    path: ensemble_cross.onnx
+    weight: 1.5
+  - name: super_ensemble
+    path: super_ensemble.onnx
+    weight: 2.0
+  models_dir: D:/Intelli_PEST-Backend/tflite_models_compatible/onnx_models
+  teacher_num_classes: 11
+training:
+  augmentation:
+    color_jitter: true
+    horizontal_flip: true
+    normalize:
+      mean:
+      - 0.485
+      - 0.456
+      - 0.406
+      std:
+      - 0.229
+      - 0.224
+      - 0.225
+    random_crop: true
+    rotation: 15
+    vertical_flip: false
+  early_stopping:
+    enabled: true
+    min_delta: 0.001
+    monitor: val_accuracy
+    patience: 15
+  epochs: 100
+  gradient_clip: 1.0
+  learning_rate: 0.005
+  optimizer: adamw
+  scheduler: cosine
+  use_amp: true
+  warmup_epochs: 3
+  weight_decay: 0.0001

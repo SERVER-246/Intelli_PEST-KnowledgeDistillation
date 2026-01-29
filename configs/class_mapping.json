@@ -1,0 +1,13 @@
+{
+  "Healthy": 0,
+  "Internode borer": 1,
+  "Pink borer": 2,
+  "Rat damage": 3,
+  "Stalk borer": 4,
+  "Top borer": 5,
+  "army worm": 6,
+  "mealy bug": 7,
+  "porcupine damage": 8,
+  "root borer": 9,
+  "termite": 10
+}

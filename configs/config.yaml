@@ -1,0 +1,220 @@
+# Knowledge Distillation Configuration - Sequential Training
+# ==========================================================
+# Purpose: Train a powerful student model using all 11 teacher models
+#          with sequential adaptation for maximum knowledge transfer
+# Author: Intelli-PEST Backend Team
+# Updated: 2024-12-23
+
+# ============================================================
+# Dataset Configuration
+# ============================================================
+dataset:
+  path: "G:/AI work/IMAGE DATASET"
+  num_classes: 11
+  image_size: 256
+  train_split: 0.8
+  val_split: 0.2
+  batch_size: 16  # Smaller batch for better gradient updates
+  num_workers: 4
+  
+  # Class names (must match folder names exactly)
+  class_names:
+    - "Healthy"
+    - "Internode borer"
+    - "Pink borer"
+    - "Rat damage"
+    - "Stalk borer"
+    - "Top borer"
+    - "army worm"
+    - "mealy bug"
+    - "porcupine damage"
+    - "root borer"
+    - "termite"
+
+# ============================================================
+# Teacher Models Configuration (All 11 Models)
+# ============================================================
+teachers:
+  # Primary directory - ONNX models (most reliable for inference)
+  models_dir: "D:/Intelli_PEST-Backend/tflite_models_compatible/onnx_models"
+  teacher_num_classes: 11
+  
+  # Alternative directories for other formats
+  alternative_dirs:
+    pytorch: "D:/Base-dir/checkpoints"
+    tflite: "D:/Intelli_PEST-Backend/tflite_models_compatible"
+  
+  # All 11 teacher models with weights (higher = more important)
+  # Order matters for sequential training!
+  models:
+    # Start with simpler models for initial learning
+    - name: "alexnet"
+      path: "alexnet.onnx"
+      weight: 0.8
+      description: "Simple baseline model"
+    
+    - name: "mobilenet_v2"
+      path: "mobilenet_v2.onnx"
+      weight: 1.0
+      description: "Efficient mobile architecture"
+    
+    - name: "efficientnet_b0"
+      path: "efficientnet_b0.onnx"
+      weight: 1.2
+      description: "Efficient scaling architecture"
+    
+    - name: "resnet50"
+      path: "resnet50.onnx"
+      weight: 1.0
+      description: "Deep residual network"
+    
+    - name: "darknet53"
+      path: "darknet53.onnx"
+      weight: 1.0
+      description: "YOLO backbone"
+    
+    - name: "inception_v3"
+      path: "inception_v3.onnx"
+      weight: 1.0
+      description: "Multi-scale inception"
+    
+    - name: "yolo11n-cls"
+      path: "yolo11n-cls.onnx"
+      weight: 1.0
+      description: "YOLO classifier"
+    
+    # Ensemble models (most powerful - trained later for refinement)
+    - name: "ensemble_attention"
+      path: "ensemble_attention.onnx"
+      weight: 1.5
+      description: "Attention-based ensemble"
+    
+    - name: "ensemble_concat"
+      path: "ensemble_concat.onnx"
+      weight: 1.5
+      description: "Concatenation ensemble"
+    
+    - name: "ensemble_cross"
+      path: "ensemble_cross.onnx"
+      weight: 1.5
+      description: "Cross-attention ensemble"
+    
+    # Super ensemble last (most powerful teacher)
+    - name: "super_ensemble"
+      path: "super_ensemble.onnx"
+      weight: 2.0
+      description: "Combined super ensemble"
+
+# ============================================================
+# Student Model Configuration
+# ============================================================
+student:
+  architecture: "EnhancedStudentModel"
+  size: "medium"  # small (~5MB), medium (~12MB), large (~20MB)
+  num_classes: 11
+  input_channels: 3
+  input_size: 256
+  
+  # Model capacity settings
+  base_channels: 48
+  expand_ratio: 4
+  dropout_rate: 0.3
+  num_consolidation_blocks: 2
+  use_fpn: true
+  
+  # Target constraints
+  target_size_mb: 15
+  target_latency_ms: 50
+
+# ============================================================
+# Sequential Training Configuration
+# ============================================================
+training:
+  # Sequential training settings
+  epochs_per_teacher: 20  # Epochs for each teacher (20 x 11 = 220 epochs)
+  final_ensemble_epochs: 30  # Final refinement with all teachers
+  
+  # Knowledge distillation settings
+  temperature: 4.0  # Higher = softer distributions
+  alpha: 0.6  # Weight for soft labels (teacher knowledge)
+  beta: 0.4   # Weight for hard labels (ground truth)
+  
+  # Elastic Weight Consolidation (prevent forgetting)
+  use_ewc: true
+  ewc_lambda: 500.0
+  
+  # Auxiliary loss (deep supervision)
+  use_aux_loss: true
+  aux_weight: 0.2
+  
+  # Optimizer settings
+  learning_rate: 0.001
+  min_learning_rate: 0.00001
+  weight_decay: 0.01
+  
+  # Mixed precision
+  use_mixed_precision: true
+  
+  # Checkpointing
+  save_every_teacher: true
+  keep_best_only: false
+
+# ============================================================
+# Export Configuration
+# ============================================================
+export:
+  # PyTorch format
+  pytorch:
+    enabled: true
+    formats: ["pt", "pth"]
+    include_optimizer: false
+  
+  # ONNX format
+  onnx:
+    enabled: true
+    opset_version: 13
+    dynamic_axes: true
+    optimize: true
+  
+  # TensorFlow Lite format
+  tflite:
+    enabled: true
+    quantization: "dynamic"  # none, dynamic, float16, int8
+    tf_version: "2.14"  # Target TF version for compatibility
+  
+  # Output directories
+  output_dir: "exported_models"
+  include_metadata: true
+  include_class_mapping: true
+
+# ============================================================
+# Evaluation Configuration
+# ============================================================
+evaluation:
+  # Metrics to track
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+    - confusion_matrix
+    - per_class_accuracy
+  
+  # Comparison with teachers
+  compare_with_teachers: true
+  
+  # Performance requirements (student must meet these)
+  requirements:
+    min_accuracy: 0.85  # 85% minimum accuracy
+    max_size_mb: 20
+    max_latency_ms: 100
+
+# ============================================================
+# Logging Configuration
+# ============================================================
+logging:
+  level: "INFO"
+  save_to_file: true
+  log_dir: "logs"
+  tensorboard: true
+  wandb: false

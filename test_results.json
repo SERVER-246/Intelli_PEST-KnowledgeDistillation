@@ -1,0 +1,147 @@
+{
+  "analysis": {
+    "total_tests": 88,
+    "by_class": {
+      "army worm": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "Healthy": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "Internode borer": {
+        "total": 8,
+        "direct_correct": 6,
+        "local_correct": 6,
+        "tunnel_correct": 0,
+        "direct_errors": [
+          {
+            "predicted": "Pink borer",
+            "image": "DSC03027.JPG",
+            "angle": 270
+          },
+          {
+            "predicted": "Pink borer",
+            "image": "DSC03027.JPG",
+            "angle": 270
+          }
+        ],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "mealy bug": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "Pink borer": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "porcupine damage": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "Rat damage": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "root borer": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "Stalk borer": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "termite": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      },
+      "Top borer": {
+        "total": 8,
+        "direct_correct": 8,
+        "local_correct": 8,
+        "tunnel_correct": 0,
+        "direct_errors": [],
+        "local_errors": [],
+        "tunnel_errors": []
+      }
+    },
+    "by_angle": {
+      "0": {
+        "total": 22,
+        "direct_correct": 22
+      },
+      "90": {
+        "total": 22,
+        "direct_correct": 22
+      },
+      "180": {
+        "total": 22,
+        "direct_correct": 22
+      },
+      "270": {
+        "total": 22,
+        "direct_correct": 20
+      }
+    },
+    "error_summary": {
+      "local": {},
+      "tunnel": {}
+    },
+    "overall": {
+      "direct_accuracy": 0.9772727272727273,
+      "local_accuracy": 0.9772727272727273,
+      "tunnel_accuracy": 0.0
+    }
+  },
+  "timestamp": "2026-01-06T09:41:30.782868",
+  "mode": "app-test",
+  "total_results": 88
+}
