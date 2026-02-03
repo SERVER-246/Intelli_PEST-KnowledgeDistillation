@@ -1,0 +1,60 @@
+# KnowledgeDistillation - Project Configuration
+# ==============================================
+# Configuration for development tools
+
+[project]
+name = "intelli-pest-kd"
+version = "1.0.0"
+description = "Knowledge Distillation training for Intelli-PEST"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+# ============================================================
+# Ruff Configuration (Linting & Formatting)
+# ============================================================
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "*.egg-info",
+    "checkpoints",
+    "logs",
+    "models",
+    "test_images",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (import sorting)
+]
+ignore = [
+    "E501",  # line too long
+    "E402",  # module level import not at top
+    "E722",  # bare except
+    "F401",  # imported but unused (training scripts often import for side effects)
+    "F541",  # f-string missing placeholders (common in logging)
+    "F841",  # local variable assigned but never used
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+# ============================================================
+# Pytest Configuration
+# ============================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

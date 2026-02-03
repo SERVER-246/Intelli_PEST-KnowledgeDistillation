@@ -1,19 +1,22 @@
 """
 Finish Training - Run final evaluation and export
 """
-import torch
 import json
-import numpy as np
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import numpy as np
+import torch
+
 sys.path.insert(0, '.')
 
 
 def main():
-    from src.enhanced_student_model import create_enhanced_student
-    from src.dataset import create_dataloaders
-    from src.evaluator import ModelEvaluator
     import yaml
+
+    from src.dataset import create_dataloaders
+    from src.enhanced_student_model import create_enhanced_student
+    from src.evaluator import ModelEvaluator
 
     print('Loading model and data...')
 
@@ -132,21 +135,21 @@ def main():
     print('\nConverting to TFLite...')
     try:
         import onnx
-        from onnx_tf.backend import prepare
         import tensorflow as tf
-        
+        from onnx_tf.backend import prepare
+
         # Load ONNX model
         onnx_model = onnx.load(str(export_dir / 'student_model.onnx'))
         tf_rep = prepare(onnx_model)
-        
+
         # Export to SavedModel
         tf_rep.export_graph(str(export_dir / 'tf_saved_model'))
-        
+
         # Convert to TFLite
         converter = tf.lite.TFLiteConverter.from_saved_model(str(export_dir / 'tf_saved_model'))
         converter.optimizations = [tf.lite.Optimize.DEFAULT]
         tflite_model = converter.convert()
-        
+
         with open(export_dir / 'student_model.tflite', 'wb') as f:
             f.write(tflite_model)
         print(f'TFLite model saved: {export_dir}/student_model.tflite')

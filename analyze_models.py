@@ -1,6 +1,6 @@
 """Analyze and compare model weights between good and bad models."""
-import torch
 import numpy as np
+import torch
 
 # Load good and bad models
 good = torch.load('student_model_final.pth', map_location='cpu', weights_only=False)
@@ -23,7 +23,7 @@ mean_diff = np.abs(good_w4 - bad_w4).mean()
 print(f'classifier.4 weight max diff: {max_diff:.6f}')
 print(f'classifier.4 weight mean diff: {mean_diff:.6f}')
 
-# Compare classifier.1 
+# Compare classifier.1
 good_w1 = good_state['classifier.1.weight'].numpy()
 bad_w1 = bad_state['classifier.1.weight'].numpy()
 max_diff1 = np.abs(good_w1 - bad_w1).max()
